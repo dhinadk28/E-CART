@@ -8,6 +8,9 @@ import Loader from '../layouts/Loader';
 import { MDBDataTable} from 'mdbreact';
 import {toast } from 'react-toastify'
 import Sidebar from "./Sidebar"
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 
 export default function ProductList() {
     const { products = [], loading = true, error }  = useSelector(state => state.productsState)
@@ -91,6 +94,50 @@ export default function ProductList() {
 
         dispatch(getAdminProducts)
     },[dispatch, error, isProductDeleted])
+    const exportPDF = () => {
+        // Create a new jsPDF instance
+        const doc = new jsPDF();
+      
+        // Add the company name
+        doc.setFontSize(18);
+        doc.text('SRI VVB ENTERPRISES', doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
+      
+        // Add the company address
+        doc.setFontSize(12);
+        doc.text('1/218, BTR NAGAR ZUZUVADI', doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
+        //heading
+
+        doc.setFontSize(12);
+        doc.text('PRODUCT LIST', doc.internal.pageSize.getWidth() / 2, 40, { align: 'center' });
+      
+        // Add the date and time
+        const now = new Date();
+        const dateTime = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+        doc.setFontSize(10);
+        doc.text(dateTime, doc.internal.pageSize.getWidth() - 20, 50, { align: 'right' });
+      
+        // Add the product list
+        const productsData = products.map((product) => [
+          product._id,
+          product.name,
+          `₹${product.price}`,
+          product.stock,
+        ]);
+        doc.autoTable({
+          head: [['ID', 'Name', 'Price', 'Stock']],
+          body: productsData,
+          startY: 70,
+          margin: { top: 10 },
+        });
+      
+        // Add the signature
+        doc.setFontSize(10);
+        doc.text('Signature', doc.internal.pageSize.getWidth() - 20, doc.internal.pageSize.getHeight() - 20, { align: 'right' });
+      
+        // Save the PDF
+        doc.save('product-list.pdf');
+      };
+      
 
 
     return (
@@ -101,6 +148,10 @@ export default function ProductList() {
         <div className="col-12 col-md-10">
             <h1 className="my-4">Product List</h1>
             <Fragment>
+            <Button variant="secondary" className="my-4 mr-4" onClick={exportPDF}>
+  Export as PDF
+</Button>
+
                 {loading ? <Loader/> : 
                     <MDBDataTable
                         data={setProducts()}
