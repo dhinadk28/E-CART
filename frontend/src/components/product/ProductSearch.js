@@ -28,13 +28,7 @@ export  default function ProductSearch(){
         'Laptops',
         'Accessories',
         'Headphones',
-        'Food',
-        'Books',
-        'Clothes/Shoes',
-        'Beauty/Health',
-        'Sports',
-        'Outdoor',
-        'Home'
+        
     ];
  
     const setCurrentPageNo = (pageNo) =>{

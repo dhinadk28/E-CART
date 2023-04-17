@@ -113,5 +113,21 @@
         "stock": 6,
         "numOfReviews": 9,
         "reviews": []
+    },
+    {
+        "name": "boAt Rockerz 550 Bluetooth Wireless Over Ear Headphones ",
+        "price": 1299.12,
+        "description": "It comes with physical Noise Isolation feature for pure audio bliss.",
+        "ratings": 3,
+        "images": [
+            {
+                "image": "/images/products/5.jpg"
+            }
+        ],
+        "category": "Headphones",
+        "seller": "Ebay",
+        "stock": 6,
+        "numOfReviews": 9,
+        "reviews": []
     }
 ]
