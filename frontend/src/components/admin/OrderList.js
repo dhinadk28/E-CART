@@ -1,5 +1,7 @@
 import { Fragment, useEffect } from "react"
 import { Button } from "react-bootstrap"
+import React, { useState } from 'react';
+
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { deleteOrder, adminOrders as adminOrdersAction } from "../../actions/orderActions"
@@ -13,9 +15,26 @@ import 'jspdf-autotable'
 
 
 export default function OrderList() {
-    const { adminOrders = [], loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState)
-
+    
+    const { adminOrders = [], loading = true, error, isOrderDeleted } = useSelector(state => state.orderState);
     const dispatch = useDispatch();
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [adminOrdersFiltered, setAdminOrders] = useState([]);
+
+    const filterOrders = () => {
+        const filteredOrders = adminOrders.filter(order => {
+          const createdDate = new Date(order.createdAt);
+          return createdDate >= startDate && createdDate <= endDate;
+        });
+        return filteredOrders;
+      };
+    
+      const handleFilter = () => {
+        const filteredOrders = filterOrders();
+        setAdminOrders(filteredOrders);
+      };
+    
 
     const setOrders = () => {
         const data = {
@@ -110,7 +129,7 @@ export default function OrderList() {
         doc.setFontSize(18);
         doc.text('SRI VVB ENTERPRISES', doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
         doc.setFontSize(12);
-        doc.text('10,INDUSTRIAL ESTATE HOSUR', doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
+        doc.text('3E,INDUSTRIAL ESTATE HOSUR', doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
         doc.setFontSize(12);
         doc.text('ORDER LIST', doc.internal.pageSize.getWidth() / 2, 40, { align: 'center' });
       
@@ -154,6 +173,8 @@ export default function OrderList() {
             <Button variant="primary" onClick={exportPDF}>
   Export as PDF
 </Button>
+
+
 
             <Fragment>
                 {loading ? <Loader/> : 
